@@ -158,14 +158,19 @@ async function startServer() {
   });
 
   app.post("/api/settings", (req, res) => {
-    const { password, ...newSettings } = req.body;
+    const { password, profileImageUrl, bio, resumeData } = req.body;
     if (password !== "2005") return res.status(401).json({ error: "Unauthorized" });
 
-    const stmt = db.prepare("UPDATE settings SET value = ? WHERE key = ?");
-    Object.entries(newSettings).forEach(([key, value]) => {
-      stmt.run(typeof value === "string" ? value : JSON.stringify(value), key);
-    });
-    res.json({ success: true });
+    try {
+      const stmt = db.prepare("UPDATE settings SET value = ? WHERE key = ?");
+      if (profileImageUrl !== undefined) stmt.run(profileImageUrl, "profileImageUrl");
+      if (bio !== undefined) stmt.run(bio, "bio");
+      if (resumeData !== undefined) stmt.run(resumeData, "resumeData");
+      res.json({ success: true });
+    } catch (err) {
+      console.error("Settings update error:", err);
+      res.status(500).json({ error: "Failed to update settings" });
+    }
   });
 
   // Seed initial data if empty

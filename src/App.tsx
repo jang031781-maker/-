@@ -323,13 +323,31 @@ const AdminPanel = ({ projects, settings, onRefresh }: { projects: Project[], se
 
   const handleSaveSettings = async (e: React.FormEvent) => {
     e.preventDefault();
-    await fetch('/api/settings', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ...editingSettings, password })
-    });
-    alert('Settings saved');
-    onRefresh();
+    if (!editingSettings) return;
+
+    try {
+      const res = await fetch('/api/settings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          password,
+          profileImageUrl: editingSettings.profileImageUrl,
+          bio: editingSettings.bio,
+          resumeData: editingSettings.resumeData
+        })
+      });
+      
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.error || 'Failed to save settings');
+      }
+      
+      alert('Settings saved successfully');
+      onRefresh();
+    } catch (err: any) {
+      console.error(err);
+      alert(`Error saving settings: ${err.message}`);
+    }
   };
 
   const handleDelete = async (id: number) => {
@@ -565,7 +583,17 @@ export default function App() {
     fetchData();
   }, []);
 
-  const resume = settings ? JSON.parse(settings.resumeData || '{}') : {};
+  const resume = React.useMemo(() => {
+    if (!settings?.resumeData) return {};
+    try {
+      // If it's already an object (shouldn't be from API, but for safety)
+      if (typeof settings.resumeData === 'object') return settings.resumeData;
+      return JSON.parse(settings.resumeData);
+    } catch (e) {
+      console.error("Resume parse error:", e);
+      return {};
+    }
+  }, [settings?.resumeData]);
 
   return (
     <div className="relative">
