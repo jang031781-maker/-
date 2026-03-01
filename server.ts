@@ -59,12 +59,12 @@ if (settingsCount.count === 0) {
   db.prepare("INSERT INTO settings (key, value) VALUES (?, ?)").run("profileImageUrl", "");
   db.prepare("INSERT INTO settings (key, value) VALUES (?, ?)").run("bio", "공간 기반 문제 해결 기획자 장다현입니다.");
   db.prepare("INSERT INTO settings (key, value) VALUES (?, ?)").run("resumeData", JSON.stringify({
-    education: [{ school: "실내건축학 전공", period: "2021 - Present", degree: "Interior Architecture & Design" }],
+    education: [{ school: "연세대학교 실내건축학 전공", period: "2024 - Present", degree: "Interior Architecture & Built Environment" }],
     experience: [
-      { title: "제1회 실건인의 밤 총괄 기획", period: "2023", description: "행사 컨셉 도출, 프로그램 기획 및 운영 프로세스 설계" },
-      { title: "캠퍼스 자치위원회 위원", period: "2022 - 2023", description: "셔틀버스 노선 개편 및 심야 셔틀 편성 정책 제안" }
+      { title: "제1회 실건인의 밤 총괄 기획", period: "2025", description: "행사 컨셉 도출, 프로그램 기획 및 운영 프로세스 설계" },
+      { title: "실내건축학회 HIDDEN 33기 전시 기획", period: "2025", description: "전시 기획, 전시장 동선 및 공간 계획, 전시 굿즈 제작" }
     ],
-    skills: ["Spatial Planning", "UX Research", "Strategy Proposal", "AutoCAD", "SketchUp", "Adobe Suite"]
+    skills: ["Spatial Planning", "UX Research", "Strategy Proposal", "AutoCAD", "Rhino", "Adobe Illustrator", "Adobe Photoshop", "Figma"]
   }));
 }
 
